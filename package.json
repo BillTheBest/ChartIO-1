@@ -1,0 +1,10 @@
+{
+	"name": "ChartVote",
+	"description": "Simple Chat vote with WebSocket",
+	"version": "0.0.1",
+	"private": true,
+	"dependencies":{
+		"express": "3.x",
+		"socket.io": "0.9.x"
+	}
+}

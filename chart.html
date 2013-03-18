@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Chart Web Socket</title>
+		<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+		<script src="/js/highcharts.js"></script>
+		<script src="/js/gray.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script type="text/javascript">
+		// Two charts definition
+		var chart1;
+
+		var votos = [0,0];
+
+		//Socket
+		var socket = io.connect('192.168.1.103');
+
+		socket.on('receberVoto', function(voto){
+			var oldTotalVotos = chart1.series[0].data[voto].y;
+			chart1.series[0].data[voto].update(oldTotalVotos + 1);
+		});
+
+		var votar = function(){
+			var voto = $('input[@name="genderS"]:checked').val(); 
+			socket.emit('enviarVoto', {voto: voto});
+		};
+
+		socket.on('enviarVotacao', function(data){
+			chart1.series[0].data[0].update(data[0]);
+			chart1.series[0].data[1].update(data[1]);
+		});
+
+		var carregarVotacao = function(){
+			socket.emit('receberVotos');
+		}
+
+		$(document).ready(function() {
+
+			carregarVotacao();
+
+		    chart1 = new Highcharts.Chart({
+		     chart: {
+		        renderTo: 'chart_1',
+		        type: 'bar',
+		        height: 350,
+		     },
+		     title: {
+		        text: 'Melhor Linguagem'
+		     },
+		     xAxis: {
+		        categories: ['javascript', 'java']
+		     },
+		     yAxis: {
+		       title: {
+		           text: 'Total de Votos'
+		        }
+		     },
+		     series: [{
+		        name: 'Votos',
+		        data: votos
+		     }]
+			 });
+		});
+
+		</script>
+    </head>
+    <body>
+    	<div id="chart_1" class="chart"></div>
+    	<input type="radio" name="linguagem" value="0">JavaScript</input>
+    	<input type="radio" name="linguagem" value="1">Java</input>
+    	<button onClick='votar();'>Votar</button>
+    </body>
+</html>    
