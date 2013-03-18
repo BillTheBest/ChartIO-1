@@ -12,17 +12,15 @@ io.configure('development', function(){
   io.set('log level', 1);
 });
 
-//Adcionando uma rota na raiz com o framework express
+//Adcionando uma rota com o framework express
 app.get('/', function(req, res){
 	res.sendfile(__dirname + '/chart.html');
 });
 
-//Adiciona rota para JavaScript
 app.get('/js/highcharts.js', function(req, res){
 	res.sendfile(__dirname + '/highcharts.js')
 });
 
-//Adiciona rota para javascript
 app.get('/js/gray.js', function(req, res){
 	res.sendfile(__dirname + '/gray.js')
 });
@@ -34,12 +32,14 @@ io.sockets.on('connection', function(socket){
 
 	socket.on('enviarVoto', function(data){
 		votos[data.voto] += 1;
+		console.log(votos[data.voto]);
 		socket.emit('receberVoto', data.voto);
 		socket.broadcast.emit('receberVoto', data.voto);
 	});
 
 
 	socket.on('receberVotos', function(){
+		console.log('aqui'+ votos);
 		socket.emit('enviarVotacao', votos);
 	})
 

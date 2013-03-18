@@ -7,44 +7,35 @@
 		<script src="/js/gray.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
 		<script type="text/javascript">
-		
-		// Variavel que representa o grafico
+		// Two charts definition
 		var chart1;
 
-		//Inicio da contagem de votos
 		var votos = [0,0];
 
-		//Conectando ao socket
+		//Socket
 		var socket = io.connect('192.168.1.103');
 
-		//Eventos do Socket 
-		//Escuta - Atualizar Grafico
 		socket.on('receberVoto', function(voto){
 			var oldTotalVotos = chart1.series[0].data[voto].y;
 			chart1.series[0].data[voto].update(oldTotalVotos + 1);
 		});
 
-		//Emite - Enviar Voto
 		var votar = function(){
 			var voto = $('input[@name="genderS"]:checked').val(); 
 			socket.emit('enviarVoto', {voto: voto});
 		};
 
-		//Escuta - Receber Votos
 		socket.on('enviarVotacao', function(data){
 			chart1.series[0].data[0].update(data[0]);
 			chart1.series[0].data[1].update(data[1]);
 		});
 
-		//Emite - Carregar votos
 		var carregarVotacao = function(){
 			socket.emit('receberVotos');
 		}
 
-		//jQuerry que inicia o grafico quando o DOM estiver montado
 		$(document).ready(function() {
 
-			//Carrega votaçao
 			carregarVotacao();
 
 		    chart1 = new Highcharts.Chart({
