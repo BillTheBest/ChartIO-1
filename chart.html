@@ -12,10 +12,10 @@
 		var chart1;
 
 		//Inicio da contagem de votos
-		var votos = [0,0];
+		var votos = [0,0,0];
 
 		//Conectando ao socket
-		var socket = io.connect('192.168.1.103');
+		var socket = io.connect('127.0.0.1');
 
 		//Eventos do Socket 
 		//Escuta - Atualizar Grafico
@@ -32,8 +32,10 @@
 
 		//Escuta - Receber Votos
 		socket.on('enviarVotacao', function(data){
-			chart1.series[0].data[0].update(data[0]);
-			chart1.series[0].data[1].update(data[1]);
+			for(var i in data){
+			    chart1.series[0].data[i].update(data[i]);
+			}
+			
 		});
 
 		//Emite - Carregar votos
@@ -57,7 +59,7 @@
 		        text: 'Melhor Linguagem'
 		     },
 		     xAxis: {
-		        categories: ['javascript', 'java']
+		        categories: ['Javascript', 'Java', 'C#']
 		     },
 		     yAxis: {
 		       title: {
@@ -77,6 +79,7 @@
     	<div id="chart_1" class="chart"></div>
     	<input type="radio" name="linguagem" value="0">JavaScript</input>
     	<input type="radio" name="linguagem" value="1">Java</input>
+	<input type="radio" name="linguagem" value="2">C#</input>
     	<button onClick='votar();'>Votar</button>
     </body>
 </html>    

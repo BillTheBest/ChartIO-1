@@ -27,7 +27,7 @@ app.get('/js/gray.js', function(req, res){
 	res.sendfile(__dirname + '/gray.js')
 });
 
-var votos = [0,0];
+var votos = [0,0,0];
 
 //Eventos do socket
 io.sockets.on('connection', function(socket){
